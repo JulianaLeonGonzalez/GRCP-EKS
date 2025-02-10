@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: Always
         ports:
         - name: grpc-api
-          containerPort: 9000
+          containerPort: 80
         env:
         - name: POD_IP
           valueFrom:
@@ -39,9 +39,9 @@ metadata:
 spec:
   # bypass kube-proxy
   ports:
-  - port: 9000
+  - port: 80
     protocol: TCP
-    targetPort: 9000
+    targetPort: 80
   clusterIP: None
   selector:
     app: grpcserver
@@ -65,13 +65,13 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    host: grcp.eks.com
-    http:
-      paths:
-      - backend:
-          service:
-            name: grpcserver
-            port:
-              number: 9000
-        path: /
-        pathType: Prefix
+    - host: grcp.eks.app.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: grpcserver
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
