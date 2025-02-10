@@ -155,7 +155,7 @@ resource "aws_codebuild_project" "grpc_codebuild" {
     type            = "GITHUB"
     location        = "https://github.com/JulianaLeonGonzalez/GRCP-EKS.git"
     git_clone_depth = 1
-    buildspec       = "buildspec.yaml"
+    buildspec       = "buildspec.yml"
   }
 }
 
