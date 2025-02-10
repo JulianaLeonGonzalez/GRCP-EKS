@@ -26,6 +26,7 @@ phases:
       - aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
       - cat $HOME/.kube/config
       - kubectl config current-context
+      - aws sts get-caller-identity
       - kubectl apply -f manifest.yaml
       - echo "Deployment completed"
 
