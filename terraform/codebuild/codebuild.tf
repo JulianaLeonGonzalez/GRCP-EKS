@@ -55,6 +55,16 @@ resource "aws_iam_role_policy" "codebuild_policy" {
   })
 }
 
+data "aws_iam_policy" "eks_access" {
+  arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+
+resource "aws_iam_role_policy_attachment" "eks_attachment" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = data.aws_iam_policy.eks_access.arn
+}
+
 resource "aws_iam_policy_attachment" "codebuild_ecr_access" {
   name       = "codebuild-ecr-access"
   roles      = [aws_iam_role.codebuild_role.name]
