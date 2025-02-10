@@ -49,7 +49,7 @@ resource "aws_iam_role_policy" "codebuild_policy" {
       {
         Effect    = "Allow"
         Action    = "sts:AssumeRole"
-        Resource  = "${aws_iam_role.codebuild_role.arn}"
+        Resource  = aws_iam_role.codebuild_role.arn
       }
     ]
   })
