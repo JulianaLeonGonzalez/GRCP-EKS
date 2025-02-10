@@ -3,31 +3,40 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_ecr_repository" "grpc_registry" {
   name                 = "grpc_registry"
-  image_tag_mutability = "IMMUTABLE"
+  image_tag_mutability = "MUTABLE"
   image_scanning_configuration {
     scan_on_push = false
   }
 }
 
-data "aws_iam_policy_document" "build_assume_role" {
-  statement {
-    effect = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["codebuild.amazonaws.com"]
-    }
-    actions = ["sts:AssumeRole"]
-  }
+resource "aws_iam_role" "codebuild_role" {
+  name = "codebuild-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+        {
+           Effect = "Allow",
+            Principal = {
+             AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/codebuild-role"
+           },
+           Action = "sts:AssumeRole"
+         },
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "codebuild.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
 }
 
-resource "aws_iam_role" "build-role" {
-  name               = "codebuild-role"
-  assume_role_policy = data.aws_iam_policy_document.build_assume_role.json
-}
 
 resource "aws_iam_role_policy" "codebuild_policy" {
   name = "codebuild-policy-adn"
-  role = aws_iam_role.build-role.id
+  role = aws_iam_role.codebuild_role.id
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -40,69 +49,15 @@ resource "aws_iam_role_policy" "codebuild_policy" {
       {
         Effect    = "Allow"
         Action    = "sts:AssumeRole"
-        Resource  = "${aws_iam_role.build-role.arn}"
+        Resource  = "${aws_iam_role.codebuild_role.arn}"
       }
     ]
   })
 }
 
-
-
-resource "aws_iam_policy" "build-ecr" {
-  name = "ECRPOLICY"
-  policy = jsonencode({
-    "Statement" : [
-      {
-        "Action" : [
-          "ecr:BatchGetImage",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:CompleteLayerUpload",
-          "ecr:GetAuthorizationToken",
-          "ecr:InitiateLayerUpload",
-          "ecr:PutImage",
-          "ecr:UploadLayerPart",
-        ],
-        "Resource" : "*",
-        "Effect" : "Allow"
-      },
-    ],
-    "Version" : "2012-10-17"
-  })
-}
-
-resource "aws_iam_policy" "eks-access" {
-  name = "EKS-access"
-  policy = jsonencode({
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "eks:DescribeCluster"
-        ],
-        "Resource": "*"
-      }
-    ],
-    "Version": "2012-10-17",
-  } )
-}
-
-resource "aws_iam_role_policy_attachment" "eks" {
-  role = aws_iam_role.build-role.name
-  policy_arn = aws_iam_policy.eks-access.arn
-}
-resource "aws_iam_role_policy_attachment" "ecr" {
-  role = aws_iam_role.build-role.name
-  policy_arn = aws_iam_policy.build-ecr.arn
-}
-resource "aws_iam_policy_attachment" "codebuild_s3_access" {
-  name       = "codebuild-s3-access"
-  roles      = [aws_iam_role.build-role.name]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
-
 resource "aws_iam_policy_attachment" "codebuild_ecr_access" {
   name       = "codebuild-ecr-access"
-  roles      = [aws_iam_role.build-role.name]
+  roles      = [aws_iam_role.codebuild_role.name]
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
 
@@ -110,7 +65,7 @@ resource "aws_iam_policy_attachment" "codebuild_ecr_access" {
 resource "aws_codebuild_project" "grpc_codebuild" {
   name          = "grpc-codebuild"
   build_timeout = "10"
-  service_role  = aws_iam_role.build-role.arn
+  service_role  = aws_iam_role.codebuild_role.arn
 
   artifacts {
     type = "NO_ARTIFACTS"
@@ -147,7 +102,7 @@ resource "aws_codebuild_project" "grpc_codebuild" {
     }
     environment_variable {
       name  = "EKS_KUBECTL_ROLE_ARN"
-      value = aws_iam_role.build-role.arn
+      value = aws_iam_role.codebuild_role.arn
     }
 
   }
