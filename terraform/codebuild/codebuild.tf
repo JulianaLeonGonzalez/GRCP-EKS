@@ -35,7 +35,7 @@ resource "aws_iam_role" "codebuild_role" {
 
 
 resource "aws_iam_role_policy" "codebuild_policy" {
-  name = "codebuild-policy-adn"
+  name = "codebuild-policy"
   role = aws_iam_role.codebuild_role.id
 
   policy = jsonencode({
@@ -54,6 +54,14 @@ resource "aws_iam_role_policy" "codebuild_policy" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "eks_describe" {
+  name = "eks_describe"
+  role = aws_iam_role.codebuild_role.id
+
+  policy = jsonencode({ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": "eks:Describe*", "Resource": "*" } ] })
+}
+
 
 data "aws_iam_policy" "eks_access" {
   arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
@@ -88,10 +96,6 @@ resource "aws_codebuild_project" "grpc_codebuild" {
     image_pull_credentials_type = "CODEBUILD"
     environment_variable {
       name = "IMAGE_TAG"
-      value = "latest"
-    }
-    environment_variable {
-      name = "IMAGE_NAME"
       value = "grpc-app"
     }
     environment_variable {

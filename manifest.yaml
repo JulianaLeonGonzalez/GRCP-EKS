@@ -65,7 +65,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: grcp.eks.app.com
+    - host: grcp.app.test.python.com
       http:
         paths:
           - backend:
