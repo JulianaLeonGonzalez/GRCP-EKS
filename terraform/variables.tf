@@ -10,3 +10,15 @@ variable "cluster_name" {
   default = "grpc-cluster"
   type = string
 }
+
+variable "public_instances" {
+  description = "Desired number of public instances available for the EKS cluster. Max:3"
+  default = 1
+  type = number
+}
+
+variable "private_instances" {
+  description = "Desired number of private instances available for the EKS cluster. Max:3"
+  default = 1
+  type = number
+}

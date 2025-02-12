@@ -3,9 +3,6 @@ syntax = "proto3";
 package grcp;
 
 service grcp{
-  // A simple RPC.
-  //
-  // Obtains the MessageResponse at a given position.
  rpc GetServerResponse(Message) returns (MessageResponse) {}
 
 }

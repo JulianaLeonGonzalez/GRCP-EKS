@@ -22,11 +22,11 @@ module "eks_cluster_and_worker_nodes" {
   nodes_sg_name = "${var.cluster_name}-node-sg"
   eks_cluster_name = var.cluster_name
   eks_cluster_subnet_ids = flatten([module.vpc_for_eks.public_subnet_ids, module.vpc_for_eks.private_subnet_ids])
-  pvt_desired_size = 1
-  pvt_max_size = 1
+  pvt_desired_size = var.private_instances
+  pvt_max_size = 3
   pvt_min_size = 1
-  pblc_desired_size = 1
-  pblc_max_size = 1
+  pblc_desired_size = var.public_instances
+  pblc_max_size = 3
   pblc_min_size = 1
   endpoint_private_access = true
   endpoint_public_access = true

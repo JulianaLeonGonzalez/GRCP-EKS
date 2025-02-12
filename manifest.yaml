@@ -51,11 +51,11 @@ kind: Ingress
 metadata:
   annotations:
    # alb.ingress.kubernetes.io/ssl-redirect: "443"
-    alb.ingress.kubernetes.io/backend-protocol-version: "HTTPS"
+    alb.ingress.kubernetes.io/backend-protocol-version: "GRPC"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:908642484012:certificate/38564efd-db6b-4823-b632-d704f6bdd0cc
+    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:908642484012:certificate/38564efd-db6b-4823-b632-d704f6bdd0cc
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
   labels:
     app: grpcserver
@@ -73,5 +73,5 @@ spec:
                 name: grpcserver
                 port:
                   number: 80
-            path: /*
+            path: /
             pathType: Prefix

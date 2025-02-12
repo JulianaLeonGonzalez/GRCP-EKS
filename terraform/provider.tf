@@ -17,10 +17,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "terraformgrpcmicroservice"
-    key = "terraform-state/terraform.tfstate"
-    region = "us-east-1"
-   # dynamodb_table = ""
+    bucket = "terraformgrpcmicroservice" # Nombre del bucket de S3
+    key = "terraform-state/terraform.tfstate" # Ruta/path/key en el bucket de S3
+    region = "us-east-1" # Región de AWS donde se encuentra el bucket
+   # dynamodb_table = "" # Descomentar esta línea e indicar la tabla de DaynamoDB para habilitar el bloqueo de estado
     encrypt = true
   }
 }

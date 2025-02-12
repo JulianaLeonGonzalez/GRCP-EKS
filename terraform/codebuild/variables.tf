@@ -17,5 +17,5 @@ variable "ecr_registry" {
 variable "codebuild_project" {
   description = "CodeBuild project name"
   type        = string
-  default = "grpc-registry"
+  default = "grpc-codebuild"
 }
