@@ -1,10 +1,10 @@
 
 # GRPC en EKS
---
+
 La siguiente solución describe cómo utilizar los módulos de Terraform presentes en el actual repositorio para el despliegue automático de microservicios basados en gRPC en un clúster de Amazon EKS y exponerlos de forma segura mediante un ALB.
 
 ## Arquitectura de la solución
---
+
 La solución comienza con un módulo reutilizable de terraform, diseñado para crear los componentes de **Networking** requeridos para exponer de forma segura diferentes microservicios mediante un **Application Load Balancer** y a su vez permitir la comunicación entre ellos bajo el protocolo **gRCP**.
 El segundo módulo de terraform se centra en la creación de un **clúster de EKS** con los accesos requeridos para alojar y gestionar eficientemente los microservicios.
 Finalmente el tercer módulo de terraform se dedica a garantizar un despliegue fluido y automatizado de los microservicios mediante un pipeline **CI/CD** en **AWS CodeBuild**, asegurando así la entrega contínua.
@@ -14,11 +14,11 @@ El siguiente diagrama ilustra la arquitectura de la solución:
 ![img.png](ArchitectureDiagram.png)
 
 ## Detalles a nivel de networking
---
+
 El flujo inicia cuando un usuario envía una patición al servidor gRCP mediante el Application Load Balancer a través del protocolo HTTP/2. El **Internet Gateway** enruta y permite el tráfico de internet al ALB dentro de la VPC. El **Application Load Balancer** envía la petición a los Target groups definidos que apuntan a los nodos de EKS que contienen los pods del servidor. En este punto el **Ingress** de kubernetes configurado para nuestra aplicación permite el tráfico al **service** y este a su vez permite el acceso a los pods que alojan el servidor. 
 
 ## Guía de despliegue
---
+
 
 ### Requisitos previos
 * Tener una cuenta de [AWS](https://aws.amazon.com/es/free/?trk=8fa18207-f2c2-4587-81a1-f2a3648571b3&sc_channel=ps&ef_id=EAIaIQobChMIkZ_atoe9iwMVaKVaBR0J6xCJEAAYASAAEgIjFfD_BwE:G:s&s_kwcid=AL!4422!3!647999789205!e!!g!!aws!19685287144!146461596896&gclid=EAIaIQobChMIkZ_atoe9iwMVaKVaBR0J6xCJEAAYASAAEgIjFfD_BwE&all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all)
@@ -62,7 +62,7 @@ kubectl apply -f auth-configmap.yaml
 11. Ejecutar el pipelide de CodeBuild para desplegar los microservicios en el clúster de EKS, para ello ingresaremos a la consola de AWS y en el buscador ingresaremos el servicio _CodeBuild_, en la consola de CodeBuild seleccionaremos el proyecto creado y daremos click en el botón "Start build" para iniciar el build y deployment de la solución.
 
 ## Links de referencia
---
+
 Python gRCP cliente - servidor
 * https://realpython.com/python-microservices-grpc/
 * https://www.aubergine.co/insights/building-for-scale-enterprise-communication-the-strategic-advantage-of-grpc
