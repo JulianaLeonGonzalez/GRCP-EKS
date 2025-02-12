@@ -14,7 +14,6 @@ resource "aws_eks_cluster" "main" {
   ]
 }
 
-
 # IAM Policy controller
 resource "aws_iam_policy" "aws_load_balancer_controller" {
   policy = file("./eks/AWS_Policies/AWSLoadBalancerControllerIAMPolicy.json")

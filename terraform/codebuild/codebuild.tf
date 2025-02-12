@@ -1,6 +1,6 @@
 
 data "aws_caller_identity" "current" {}
-
+/*
 resource "aws_ecr_repository" "grpc_registry" {
   name                 = "grpc_registry"
   image_tag_mutability = "MUTABLE"
@@ -11,17 +11,35 @@ resource "aws_ecr_repository" "grpc_registry" {
 
 resource "aws_iam_role" "codebuild_role" {
   name = "codebuild-role"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
-        {
-           Effect = "Allow",
-            Principal = {
-             AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/codebuild-role"
-           },
-           Action = "sts:AssumeRole"
-         },
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "codebuild.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+ */
+//El rol codebuild-role se crea para que codebuild pueda acceder a los recursos de AWS, sin embargo, requiere el acceso sts:AssumeRole, por lo que primero debe crearse el rol y luego modificarse para agregarle el permiso  AssumeRole, las siguientes linas comentadas pueden usarse para su modificacion
+
+resource "aws_iam_role" "codebuild_role" {
+  name = "codebuild-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/codebuild-role"
+        },
+        Action = "sts:AssumeRole"
+      },
       {
         Effect = "Allow",
         Principal = {

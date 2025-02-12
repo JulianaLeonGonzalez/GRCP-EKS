@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "sg_ingress_public_443" {
   protocol          = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 }
-/*
+
 resource "aws_security_group_rule" "sg_ingress_public_80" {
   security_group_id = aws_security_group.public_sg.id
   type              = "ingress"
@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "sg_ingress_public_80" {
   protocol          = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 }
-*/
+
 ## Egress rule
 resource "aws_security_group_rule" "sg_egress_public" {
   security_group_id = aws_security_group.public_sg.id
