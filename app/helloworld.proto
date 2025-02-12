@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-package grcp;
+package helloworld;
 
-service grcp{
+service helloworld{
+  // A simple RPC.
+  //
+  // Obtains the MessageResponse at a given position.
  rpc GetServerResponse(Message) returns (MessageResponse) {}
 
 }

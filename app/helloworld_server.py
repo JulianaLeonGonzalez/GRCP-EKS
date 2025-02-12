@@ -3,12 +3,13 @@
 
 import grpc
 from concurrent import futures
-import grcp_pb2_grpc as pb2_grpc
-import grcp_pb2 as pb2
+import time
+import helloworld_pb2_grpc as pb2_grpc
+import helloworld_pb2 as pb2
 from grpc_reflection.v1alpha import reflection
 
 
-class grcpService(pb2_grpc.grcpServicer):
+class helloworldService(pb2_grpc.helloworldServicer):
 
     def __init__(self, *args, **kwargs):
         pass
@@ -17,7 +18,7 @@ class grcpService(pb2_grpc.grcpServicer):
 
         # get the string from the incoming request
         message = request.message
-        result = f'Server Hello world. Received message is {message}'
+        result = f'Thanks for talking to gRPC server!!! Welcome to hello world. Received message is {message}'
         result = {'message': result, 'received': True}
 
         return pb2.MessageResponse(**result)
@@ -25,9 +26,9 @@ class grcpService(pb2_grpc.grcpServicer):
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    pb2_grpc.add_grcpServicer_to_server(grcpService(), server)
+    pb2_grpc.add_helloworldServicer_to_server(helloworldService(), server)
     SERVICE_NAMES = (
-        pb2.DESCRIPTOR.services_by_name['grcp'].full_name,
+        pb2.DESCRIPTOR.services_by_name['helloworld'].full_name,
         reflection.SERVICE_NAME,
     )
     reflection.enable_server_reflection(SERVICE_NAMES, server)

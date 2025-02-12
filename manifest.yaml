@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: grpc-demo
-        image: 908642484012.dkr.ecr.us-east-1.amazonaws.com/grpc_registry:grpc-app
+        image: 908642484012.dkr.ecr.us-east-1.amazonaws.com/grpc-registry:grpc-app
         imagePullPolicy: Always
         ports:
         - name: grpc-api
@@ -51,11 +51,12 @@ kind: Ingress
 metadata:
   annotations:
    # alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/backend-protocol-version: "GRPC"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:908642484012:certificate/38564efd-db6b-4823-b632-d704f6bdd0cc
+    #  alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:908642484012:certificate/9789b9ba-0c67-4ada-a439-6d5bb6ace6af
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
   labels:
     app: grpcserver
