@@ -9,13 +9,15 @@ La solución comienza con un módulo reutilizable de terraform, diseñado para c
 El segundo módulo de terraform se centra en la creación de un **clúster de EKS** con los accesos requeridos para alojar y gestionar eficientemente los microservicios.
 Finalmente el tercer módulo de terraform se dedica a garantizar un despliegue fluido y automatizado de los microservicios mediante un pipeline **CI/CD** en **AWS CodeBuild**, asegurando así la entrega contínua.
 
+
+
 El siguiente diagrama ilustra la arquitectura de la solución:
 
 ![img.png](ArchitectureDiagram.png)
 
 ## Detalles a nivel de networking
 
-El flujo inicia cuando un usuario envía una patición al servidor gRCP mediante el Application Load Balancer a través del protocolo HTTP/2. El **Internet Gateway** enruta y permite el tráfico de internet al ALB dentro de la VPC. El **Application Load Balancer** envía la petición a los Target groups definidos que apuntan a los nodos de EKS que contienen los pods del servidor. En este punto el **Ingress** de kubernetes configurado para nuestra aplicación permite el tráfico al **service** y este a su vez permite el acceso a los pods que alojan el servidor. 
+El flujo inicia cuando un usuario envía una petición al servidor gRCP mediante el Application Load Balancer a través del protocolo HTTP/2. El **Internet Gateway** enruta y permite el tráfico de internet al ALB dentro de la VPC. El **Application Load Balancer** envía la petición a los Target groups definidos que apuntan a los nodos de EKS que contienen los pods del servidor. En este punto el **Ingress** de kubernetes configurado para nuestra aplicación permite el tráfico al **service** y este a su vez permite el acceso a los pods que alojan el servidor. 
 
 ## Guía de despliegue
 
@@ -60,6 +62,10 @@ kubectl apply -f auth-configmap.yaml
 10. Instalar el Helm AWS Load Balancer Controller en el clúster de EKS  [Helm AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html) en su máquina local. 
 
 11. Ejecutar el pipelide de CodeBuild para desplegar los microservicios en el clúster de EKS, para ello ingresaremos a la consola de AWS y en el buscador ingresaremos el servicio _CodeBuild_, en la consola de CodeBuild seleccionaremos el proyecto creado y daremos click en el botón "Start build" para iniciar el build y deployment de la solución.
+
+## Consideraciones
+* Para automatizar el fujo completo de despliegue y aprovisionamiento se deben agregar los módulos Terraform necesarios para la instalación del helm Load Balancer Controller ó implementar otras soluciones que permitan la instalación del controler como el uso de addons ó scripts dentro de las EC2.
+* Para la exposición del servicio de forma segura es requerido generar o importar un certificado TLS mediante secrets manager, así como el uso de Route53 para enrutar el tráfico de un host name deseado al load balancer expuesto.
 
 ## Links de referencia
 
