@@ -18,8 +18,7 @@ El siguiente diagrama ilustra la arquitectura de la solución:
 ## Detalles a nivel de networking
 
 ---
-El usuario envía una patición al servidor gRCP mediante el Application Load Balancer a través del protocolo HTTP/2. El Application Load Balancer envía la petición a los pods de EKS que contienen el servidor, expuestos por el service de kubernetes. El número de pods de gRPC se puede escalar automáticamente en función del tráfico mediante el escalador automático de pods horizontal de Kubernetes. El grupo de destino del Application Load Balancer realiza comprobaciones de estado en los nodos de Amazon EKS, evalúa si el destino está en buen estado y reenvía el tráfico solo a los nodos en buen estado.
-
+El flujo inicia cuando un usuario envía una patición al servidor gRCP mediante el Application Load Balancer a través del protocolo HTTP/2. El **Internet Gateway** enruta y permite el tráfico de internet al ALB dentro de la VPC. El **Application Load Balancer** envía la petición a los Target groups definidos que apuntan a los nodos de EKS que contienen los pods del servidor. En este punto el **Ingress** de kubernetes configurado para nuestra aplicación permite el tráfico al **service** y este a su vez permite el acceso a los pods que alojan el servidor. 
 
 ## Guía de despliegue
 
