@@ -61,38 +61,8 @@ terraform apply
 ```bash
 kubectl apply -f auth-configmap.yaml
 ```
-10. Instalar el Helm AWS Load Balancer Controller en el clúster de EKS mediante los siguientes comandos. Este paso requiere tener instalado [Helm](https://helm.sh/docs/helm/helm_install/) en su máquina local. 
-```bash
-eksctl utils associate-iam-oidc-provider --region=<region> --cluster=<eks_cluster_name> --approve
+10. Instalar el Helm AWS Load Balancer Controller en el clúster de EKS  [Helm AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html) en su máquina local. 
 
-Ejemplo:
-
-eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=grpc-cluster --approve
-```
-
-```bash
-eksctl create iamserviceaccount --cluster=<eks_cluster_name> --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=arn:aws:iam::<account_id>:policy/AWSLoadBalancerControllerIAMPolicy --approve --override-existing-serviceaccounts
-
-Ejemplo:
-
-eksctl create iamserviceaccount --cluster=grpc-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=arn:aws:iam::908642484012:policy/AWSLoadBalancerControllerIAMPolicy --approve --override-existing-serviceaccounts
-```
-
-```bash
-curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2
-```
-
-```bash
-helm repo add eks https://aws.github.io/eks-charts
-```
-
-```bash
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=<eks_cluster_name> --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set region=<region> --set vpcId=<vpc_id>
-
-Ejemplo:
-
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=grpc-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set region=us-east-1 --set vpcId=vpc-0c1fc74d67b1857d8
-```
 11. Ejecutar el pipelide de CodeBuild para desplegar los microservicios en el clúster de EKS, para ello ingresaremos a la consola de AWS y en el buscador ingresaremos el servicio _CodeBuild_, en la consola de CodeBuild seleccionaremos el proyecto creado y daremos click en el botón "Start build" para iniciar el build y deployment de la solución.
 
 ## Links de referencia
