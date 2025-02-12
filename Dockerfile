@@ -7,4 +7,4 @@ ADD app/ /
 RUN pip install -r requirements.txt
 
 EXPOSE 80
-CMD [ "python", "./grcp_server.py"]
+CMD [ "python", "./helloworld_server.py"]
